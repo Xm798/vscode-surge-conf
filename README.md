@@ -11,15 +11,13 @@ VSCode extension for [Surge](https://nssurge.com/) network proxy configuration f
 
 ## Supported File Types
 
-| Extension | Description |
-|-----------|-------------|
-| `.dconf` | Detached configuration fragments (auto-detected) |
-| `.sgmodule` | Surge modules (auto-detected) |
-| `.conf` | Main configuration files (detected via first-line matching) |
+| Type | Detection |
+|------|-----------|
+| `.sgmodule` | Auto-detected by extension |
+| `#!MANAGED-CONFIG` | Auto-detected by first line (managed configs) |
+| `#!SURGE` | Auto-detected by first line (add this to any Surge config) |
 
-### `.conf` File Association
-
-Since `.conf` is a generic extension, this extension uses first-line detection (`#!MANAGED-CONFIG` or `[General]`). To always associate `.conf` files with Surge, add to your VSCode settings:
+For `.conf` or other generic extensions, either add `#!SURGE` as the first line, or configure VS Code manually:
 
 ```json
 "files.associations": {

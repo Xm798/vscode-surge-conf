@@ -36,10 +36,9 @@
           "surge"
         ],
         "extensions": [
-          ".dconf",
           ".sgmodule"
         ],
-        "firstLine": "^#!MANAGED-CONFIG|^\\[General\\]",
+        "firstLine": "^#!MANAGED-CONFIG|^#!SURGE",
         "configuration": "./language-configuration.json"
       }
     ],
@@ -51,7 +50,9 @@
       }
     ]
   },
+  "icon": "images/icon.png",
   "scripts": {
+    "vscode:prepublish": "bun run compile",
     "compile": "bunx tsc -p ./",
     "watch": "bunx tsc -watch -p ./",
     "test": "bun run out/test/grammar.test.js && bun run out/test/formatter.test.js",
@@ -59,7 +60,7 @@
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
-    "@types/vscode": "^1.85.0",
+    "@types/vscode": "~1.85.0",
     "typescript": "^5.3.0",
     "vscode-tmgrammar-test": "^0.1.3"
   }
