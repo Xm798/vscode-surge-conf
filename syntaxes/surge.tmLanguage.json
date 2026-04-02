@@ -8,6 +8,8 @@
     { "include": "#section-headers" },
     { "include": "#key-value" },
     { "include": "#rule-types" },
+    { "include": "#rule-params" },
+    { "include": "#urls" },
     { "include": "#builtin-policies" },
     { "include": "#protocol-keywords" },
     { "include": "#group-type-keywords" },
@@ -136,6 +138,7 @@
                 { "include": "#parameter-keywords" },
                 { "include": "#script-type-keywords" },
                 { "include": "#regex-patterns" },
+                { "include": "#urls" },
                 { "include": "#strings" },
                 { "include": "#booleans" },
                 { "include": "#placeholders" },
@@ -154,6 +157,26 @@
           "comment": "Rule type keywords at the start of comma-separated rule lines",
           "match": "\\b(DOMAIN-SUFFIX|DOMAIN-KEYWORD|DOMAIN-SET|DOMAIN|IP-CIDR6|IP-CIDR|IP-ASN|GEOIP|USER-AGENT|URL-REGEX|PROCESS-NAME|DEST-PORT|IN-PORT|SRC-PORT|SRC-IP|SUBNET|PROTOCOL|HOSTNAME-TYPE|CELLULAR-RADIO|DEVICE-NAME|MAC-ADDRESS|RULE-SET|AND|OR|NOT|FINAL)\\b",
           "name": "support.function.rule-type.surge"
+        }
+      ]
+    },
+    "rule-params": {
+      "patterns": [
+        {
+          "comment": "Rule optional parameters like no-resolve, extended-matching, dns-failed",
+          "match": "(?<=,)\\s*(no-resolve|extended-matching|dns-failed)\\b",
+          "captures": {
+            "1": { "name": "variable.parameter.rule.surge" }
+          }
+        }
+      ]
+    },
+    "urls": {
+      "patterns": [
+        {
+          "comment": "URLs (http/https) in rule values, proxy definitions, etc.",
+          "match": "https?://[^\\s,\"']+",
+          "name": "string.other.link.surge"
         }
       ]
     },
