@@ -47,10 +47,10 @@
     ]
   },
   "scripts": {
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "test": "node ./out/test/grammar.test.js && node ./out/test/formatter.test.js",
-    "pretest": "npm run compile"
+    "compile": "bunx tsc -p ./",
+    "watch": "bunx tsc -watch -p ./",
+    "test": "bun run out/test/grammar.test.js && bun run out/test/formatter.test.js",
+    "pretest": "bun run compile"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
