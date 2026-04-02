@@ -1,4 +1,4 @@
-# Surge Configuration Language Support
+# Surge Syntax
 
 VSCode extension for [Surge](https://nssurge.com/) network proxy configuration files.
 
