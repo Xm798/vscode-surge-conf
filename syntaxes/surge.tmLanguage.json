@@ -1,0 +1,322 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Surge Configuration",
+  "scopeName": "source.surge",
+  "patterns": [
+    { "include": "#directives" },
+    { "include": "#comments" },
+    { "include": "#section-headers" },
+    { "include": "#key-value" },
+    { "include": "#rule-types" },
+    { "include": "#builtin-policies" },
+    { "include": "#protocol-keywords" },
+    { "include": "#group-type-keywords" },
+    { "include": "#script-type-keywords" },
+    { "include": "#rewrite-direction-keywords" },
+    { "include": "#rewrite-action-keywords" },
+    { "include": "#parameter-keywords" },
+    { "include": "#ssid-prefixes" },
+    { "include": "#regex-patterns" },
+    { "include": "#placeholders" },
+    { "include": "#strings" },
+    { "include": "#booleans" },
+    { "include": "#ip-cidr" },
+    { "include": "#numbers" }
+  ],
+  "repository": {
+    "directives": {
+      "patterns": [
+        {
+          "comment": "#!MANAGED-CONFIG with URL and optional key=value params",
+          "match": "^(#!MANAGED-CONFIG)\\s+(\\S+)(.*)$",
+          "captures": {
+            "1": { "name": "keyword.control.directive.surge" },
+            "2": { "name": "string.unquoted.url.surge" },
+            "3": {
+              "patterns": [
+                {
+                  "match": "(\\w+)(=)(\\S+)",
+                  "captures": {
+                    "1": { "name": "variable.other.key.surge" },
+                    "2": { "name": "keyword.operator.assignment.surge" },
+                    "3": { "name": "string.unquoted.surge" }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "comment": "#!include directive",
+          "match": "^(#!include)\\s+(.+)$",
+          "captures": {
+            "1": { "name": "keyword.control.directive.surge" },
+            "2": { "name": "string.unquoted.path.surge" }
+          }
+        },
+        {
+          "comment": "Key=value style directives: #!name=, #!desc=, etc.",
+          "match": "^(#!(?:name|desc|system|arguments|requirement))(=)(.*)$",
+          "captures": {
+            "1": { "name": "keyword.control.directive.surge" },
+            "2": { "name": "keyword.operator.assignment.surge" },
+            "3": { "name": "string.unquoted.surge" }
+          }
+        },
+        {
+          "comment": "Platform restriction and auto-upgrade directives",
+          "match": "^#!(?:IOS-ONLY|MACOS-ONLY|TVOS-ONLY|FORBIDDEN-AUTO-UPGRADE)\\b.*$",
+          "name": "keyword.control.directive.surge"
+        },
+        {
+          "comment": "REQUIREMENT directives (can appear at start or end of line)",
+          "match": "(?:^|\\s)((?:#|//)!REQUIREMENT)\\b.*$",
+          "captures": {
+            "1": { "name": "keyword.control.directive.surge" }
+          }
+        }
+      ]
+    },
+    "comments": {
+      "patterns": [
+        {
+          "comment": "# line comment (but not #! directives)",
+          "match": "^\\s*(#)(?!!)(.*)$",
+          "name": "comment.line.number-sign.surge"
+        },
+        {
+          "comment": "; line comment",
+          "match": "^\\s*(;)(.*)$",
+          "name": "comment.line.semicolon.surge"
+        },
+        {
+          "comment": "// line comment at start of line (but not //! directives)",
+          "match": "^\\s*(//)(?!!)(.*)$",
+          "name": "comment.line.double-slash.surge"
+        },
+        {
+          "comment": "Inline # comment (preceded by whitespace, not #!)",
+          "match": "\\s+(#)(?!!)(.*)$",
+          "name": "comment.line.number-sign.surge"
+        },
+        {
+          "comment": "Inline ; comment — REMOVED, only line-start ; supported to avoid false positives"
+        },
+        {
+          "comment": "Inline // comment (preceded by whitespace, not inside URL)",
+          "match": "(?<!:)\\s+(//)(.*)$",
+          "name": "comment.line.double-slash.surge"
+        }
+      ]
+    },
+    "section-headers": {
+      "patterns": [
+        {
+          "match": "^\\s*(\\[)[\\w][\\w\\s\\-]*(\\])\\s*$",
+          "name": "entity.name.section.surge",
+          "captures": {
+            "1": { "name": "punctuation.definition.section.begin.surge" },
+            "2": { "name": "punctuation.definition.section.end.surge" }
+          }
+        }
+      ]
+    },
+    "key-value": {
+      "patterns": [
+        {
+          "match": "^\\s*([\\w\\-\\.]+)\\s*(=)\\s*(.*)$",
+          "captures": {
+            "1": { "name": "variable.other.key.surge" },
+            "2": { "name": "keyword.operator.assignment.surge" },
+            "3": {
+              "name": "string.unquoted.surge",
+              "patterns": [
+                { "include": "#protocol-keywords" },
+                { "include": "#group-type-keywords" },
+                { "include": "#parameter-keywords" },
+                { "include": "#script-type-keywords" },
+                { "include": "#regex-patterns" },
+                { "include": "#strings" },
+                { "include": "#booleans" },
+                { "include": "#placeholders" },
+                { "include": "#ip-cidr" },
+                { "include": "#numbers" },
+                { "include": "#comments" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "rule-types": {
+      "patterns": [
+        {
+          "comment": "Rule type keywords at the start of comma-separated rule lines",
+          "match": "\\b(DOMAIN-SUFFIX|DOMAIN-KEYWORD|DOMAIN-SET|DOMAIN|IP-CIDR6|IP-CIDR|IP-ASN|GEOIP|USER-AGENT|URL-REGEX|PROCESS-NAME|DEST-PORT|IN-PORT|SRC-PORT|SRC-IP|SUBNET|PROTOCOL|HOSTNAME-TYPE|CELLULAR-RADIO|DEVICE-NAME|MAC-ADDRESS|RULE-SET|AND|OR|NOT|FINAL)\\b",
+          "name": "support.function.rule-type.surge"
+        }
+      ]
+    },
+    "builtin-policies": {
+      "patterns": [
+        {
+          "comment": "Built-in policy keywords",
+          "match": "\\b(DIRECT|REJECT-TINYGIF|REJECT-NO-DROP|REJECT-DROP|REJECT)\\b",
+          "name": "constant.language.policy.surge"
+        }
+      ]
+    },
+    "protocol-keywords": {
+      "patterns": [
+        {
+          "comment": "Proxy protocol names after = or comma, must be followed by comma/space/EOL, not part of hostname",
+          "match": "(?<=(?:^[\\w\\-\\.]+\\s*=|,)\\s*|^\\s*)\\b(https|http|socks5-tls|socks5|snell|ss|vmess|trojan|tuic|hysteria2|anytls|ssh|wireguard|direct|reject)(?=[,\\s]|$)",
+          "name": "constant.language.protocol.surge"
+        }
+      ]
+    },
+    "group-type-keywords": {
+      "patterns": [
+        {
+          "comment": "Proxy Group type names after = or comma, must be followed by comma/space/EOL",
+          "match": "(?<=(?:^[\\w\\-\\.]+\\s*=|,)\\s*|^\\s*)\\b(select|url-test|fallback|load-balance|subnet|smart)(?=[,\\s]|$)",
+          "name": "constant.language.group-type.surge"
+        }
+      ]
+    },
+    "script-type-keywords": {
+      "patterns": [
+        {
+          "comment": "Script type key=value pairs (type=http-request etc.)",
+          "match": "(type)(=)(http-request|http-response|cron|event|dns|rule|generic)\\b",
+          "captures": {
+            "1": { "name": "variable.other.key.surge" },
+            "2": { "name": "keyword.operator.assignment.surge" },
+            "3": { "name": "constant.language.script-type.surge" }
+          }
+        }
+      ]
+    },
+    "rewrite-direction-keywords": {
+      "patterns": [
+        {
+          "comment": "HTTP direction prefixes at start of rewrite lines",
+          "match": "^(http-(?:request|response)(?:-jq)?)\\b",
+          "captures": {
+            "1": { "name": "keyword.other.direction.surge" }
+          }
+        }
+      ]
+    },
+    "rewrite-action-keywords": {
+      "patterns": [
+        {
+          "comment": "URL Rewrite action keywords at end of line",
+          "match": "\\b(reject|header|302|307)\\s*$",
+          "name": "constant.language.action.surge"
+        }
+      ]
+    },
+    "parameter-keywords": {
+      "patterns": [
+        {
+          "comment": "Named parameters in comma-separated definitions (key=value after comma)",
+          "match": "(?<=,\\s*)([\\w][\\w\\-\\.]*)(=)",
+          "captures": {
+            "1": { "name": "variable.parameter.surge" },
+            "2": { "name": "keyword.operator.assignment.surge" }
+          }
+        }
+      ]
+    },
+    "ssid-prefixes": {
+      "patterns": [
+        {
+          "comment": "SSID Setting prefixes",
+          "match": "^(SSID:\\S+|TYPE:(?:WIFI|WIRED|CELLULAR)|DEFAULT)\\b",
+          "name": "support.function.ssid-prefix.surge"
+        }
+      ]
+    },
+    "regex-patterns": {
+      "patterns": [
+        {
+          "comment": "Regex patterns starting with caret at line start",
+          "match": "^(\\^[^\\s,]+)",
+          "captures": {
+            "1": { "name": "string.regexp.surge" }
+          }
+        },
+        {
+          "comment": "Regex patterns starting with caret after delimiter",
+          "match": "(?<=\\s|,|=)(\\^[^\\s,]+)",
+          "captures": {
+            "1": { "name": "string.regexp.surge" }
+          }
+        }
+      ]
+    },
+    "placeholders": {
+      "patterns": [
+        {
+          "match": "%(APPEND|INSERT)%",
+          "name": "variable.other.placeholder.surge"
+        },
+        {
+          "match": "%[\\w\\-]+%",
+          "name": "variable.other.placeholder.surge"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "begin": "\"",
+          "end": "\"",
+          "name": "string.quoted.double.surge",
+          "beginCaptures": {
+            "0": { "name": "punctuation.definition.string.begin.surge" }
+          },
+          "endCaptures": {
+            "0": { "name": "punctuation.definition.string.end.surge" }
+          }
+        }
+      ]
+    },
+    "booleans": {
+      "patterns": [
+        {
+          "match": "\\b(true|false)\\b",
+          "name": "constant.language.boolean.surge"
+        }
+      ]
+    },
+    "ip-cidr": {
+      "patterns": [
+        {
+          "comment": "IPv4 with CIDR notation (must come before plain IP)",
+          "match": "\\b\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}/\\d{1,2}\\b",
+          "name": "constant.numeric.ip.cidr.surge"
+        },
+        {
+          "comment": "IPv4 address",
+          "match": "\\b\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\b",
+          "name": "constant.numeric.ip.surge"
+        },
+        {
+          "comment": "IPv6 address (common forms)",
+          "match": "(?:(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|(?:[0-9a-fA-F]{1,4}:){1,7}:|::(?:[0-9a-fA-F]{1,4}:){0,5}[0-9a-fA-F]{1,4}|[0-9a-fA-F]{1,4}::(?:[0-9a-fA-F]{1,4}:){0,4}[0-9a-fA-F]{1,4}|::1|::)(?:/\\d{1,3})?",
+          "name": "constant.numeric.ip.v6.surge"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "match": "\\b\\d+\\b",
+          "name": "constant.numeric.surge"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,46 @@
+#!name=Ad Blocker & Privacy Guard
+#!desc=Block ads, trackers, and privacy-invasive scripts across apps and browsers. Supports custom hostname override.
+#!system=ios
+#!arguments=hostname:api.example.com,block_trackers:true,custom_reject:reject-tinygif,mitm_enabled:true
+#!requirement=CORE_VERSION>=22
+
+[General]
+force-http-engine-hosts = %APPEND% %hostname%, *.ads.example.com, tracker.analytics.io
+
+[Rule]
+DOMAIN-SUFFIX,ads.example.com,%custom_reject% #!REQUIREMENT CORE_VERSION>=20
+DOMAIN-SUFFIX,tracker.analytics.io,REJECT
+DOMAIN-KEYWORD,adservice,REJECT-TINYGIF //!REQUIREMENT CORE_VERSION>=22
+DOMAIN-KEYWORD,doubleclick,REJECT
+DOMAIN-SET,https://raw.githubusercontent.com/nicegram/nicegram-adguard/main/rules.txt,REJECT
+URL-REGEX,^https?://ads\..*\.com/sdk,REJECT-DROP
+IP-CIDR,203.0.113.0/24,REJECT,no-resolve
+
+[URL Rewrite]
+^https?://(www\.)?ads\.example\.com/api/v\d+/banner - reject
+^https?://analytics\.thirdparty\.com/collect\? - reject
+^http://captive\.apple\.com/hotspot-detect.html http://captive.apple.com/library/test/success.html 302
+
+[Map Local]
+^https://api\.example\.com/v\d+/ads data-type=text data="{\"ads\":[]}" status-code=200 header="Content-Type:application/json"
+^https://cdn\.adnetwork\.com/sdk/config\.json data-type=file data=empty-config.json
+^https://pixel\.tracker\.io/collect data-type=tiny-gif
+^https://telemetry\.example\.com/v2/report data-type=base64 data=e30= status-code=204
+
+[Script]
+Ad-Cleanup = type=http-response,pattern=^https?://%hostname%/api/v\d+/feed,script-path=https://raw.githubusercontent.com/user/scripts/main/ad-cleanup.js,requires-body=true,max-size=3145728,timeout=30
+Daily-Report = type=cron,cronexp="0 9 * * *",script-path=https://raw.githubusercontent.com/user/scripts/main/daily-report.js,timeout=120,wake-system=true
+DNS-Filter = type=dns,script-path=https://raw.githubusercontent.com/user/scripts/main/dns-filter.js,timeout=10
+Network-Change = type=event,event-name=network-changed,script-path=https://raw.githubusercontent.com/user/scripts/main/on-network-change.js,timeout=20
+Rule-Matcher = type=rule,script-path=https://raw.githubusercontent.com/user/scripts/main/rule-matcher.js,timeout=10
+Generic-Task = type=generic,script-path=https://raw.githubusercontent.com/user/scripts/main/generic-task.js,timeout=60
+
+[Panel]
+AdBlock-Status = title="Ad Blocker",content="Active | Blocked: Loading...",style=info,update-interval=600,script-name=Ad-Cleanup,icon=shield.lefthalf.filled,icon-color=#FF6B35
+
+[MITM]
+skip-server-cert-verify = %mitm_enabled%
+h2 = true
+hostname = %INSERT% %hostname%, *.ads.example.com, api.example.com, cdn.adnetwork.com, pixel.tracker.io, telemetry.example.com
+ca-passphrase = 3F2504E0-4F89-11D3-9A0C-0305E82C3301
+ca-p12 = MIIKPAIBAzCCCgYGCSqGSIb3DQEHAaCCCfcEggn...
