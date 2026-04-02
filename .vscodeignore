@@ -1,11 +1,14 @@
 .vscode/**
+.claude/**
 src/**
 test/**
+out/test/**
 node_modules/**
+external/**
 .gitignore
 tsconfig.json
+bun.lock
 **/*.ts
 **/*.map
-PLAN.md
 *.md
 !README.md

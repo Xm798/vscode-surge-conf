@@ -126,7 +126,7 @@
     "key-value": {
       "patterns": [
         {
-          "match": "^\\s*([\\w\\-\\.]+)\\s*(=)\\s*(.*)$",
+          "match": "^\\s*([^=\\s^][^=]*?)\\s*(=)\\s*(.*)$",
           "captures": {
             "1": { "name": "variable.other.key.surge" },
             "2": { "name": "keyword.operator.assignment.surge" },
@@ -166,7 +166,7 @@
           "comment": "Rule optional parameters like no-resolve, extended-matching, dns-failed",
           "match": "(?<=,)\\s*(no-resolve|extended-matching|dns-failed)\\b",
           "captures": {
-            "1": { "name": "variable.parameter.rule.surge" }
+            "1": { "name": "keyword.other.rule-param.surge" }
           }
         }
       ]
@@ -176,7 +176,7 @@
         {
           "comment": "URLs (http/https) in rule values, proxy definitions, etc.",
           "match": "https?://[^\\s,\"']+",
-          "name": "string.other.link.surge"
+          "name": "markup.underline.link.surge"
         }
       ]
     },

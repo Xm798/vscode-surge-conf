@@ -1,9 +1,9 @@
 {
   "name": "surge-conf",
-  "displayName": "Surge Configuration",
-  "description": "Syntax highlighting and formatting for Surge configuration files",
+  "displayName": "Surge Configuration Language Support",
+  "description": "Syntax highlighting, formatting, auto-completion and hover documentation for Surge configuration files",
   "version": "0.0.1",
-  "publisher": "cyrus",
+  "publisher": "cyrus-x",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -17,6 +17,11 @@
     "network",
     "configuration"
   ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Xm798/vscode-surge-conf"
+  },
   "extensionKind": [
     "ui",
     "workspace"
