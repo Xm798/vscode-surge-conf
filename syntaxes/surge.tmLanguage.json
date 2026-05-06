@@ -82,8 +82,8 @@
     "comments": {
       "patterns": [
         {
-          "comment": "# line comment (but not #! directives)",
-          "match": "^\\s*(#)(?!!)(.*)$",
+          "comment": "# line comment, including unrecognized #! markers like #!SURGE (recognized #! directives match earlier in #directives)",
+          "match": "^\\s*(#)(.*)$",
           "name": "comment.line.number-sign.surge"
         },
         {
