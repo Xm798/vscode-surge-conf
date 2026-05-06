@@ -145,11 +145,11 @@ export class SurgeFormatter
 
     // Ensure exactly one blank line between sections
     for (let s = 1; s < sections.length; s++) {
-      const prevEnd = sections[s - 1].endLine;
+      const prevStart = sections[s - 1].startLine;
       const currStart = sections[s].startLine;
 
       let blankStart = currStart - 1;
-      while (blankStart > prevEnd && isBlankLine(lines[blankStart])) {
+      while (blankStart > prevStart && isBlankLine(lines[blankStart])) {
         blankStart--;
       }
       blankStart++;
